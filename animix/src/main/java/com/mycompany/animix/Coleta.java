@@ -12,6 +12,7 @@ import com.github.britooo.looca.api.group.sistema.Sistema;
 import com.github.britooo.looca.api.group.temperatura.Temperatura;
 import com.github.britooo.looca.api.util.Conversor;
 import java.util.List;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  *
@@ -20,6 +21,7 @@ import java.util.List;
 public class Coleta {
 
     public void coletar() {
+        // Objetos Looca api
 
         Sistema sistema = new Sistema();
         Memoria memoria = new Memoria();
@@ -28,14 +30,48 @@ public class Coleta {
         DiscoGrupo grupoDeDiscos = new DiscoGrupo();
         ServicoGrupo grupoDeServicos = new ServicoGrupo();
         ProcessoGrupo grupoDeProcessos = new ProcessoGrupo();
+        Conversor conversor = new Conversor();
 
-        Double usoMemoria = memoria.getEmUso().doubleValue();
-        Double temp = temperatura.getTemperatura().doubleValue();
+        // Coletando memória
+        String memoriaNumbersOnly = conversor.formatarBytes(memoria.getEmUso()).replace(" GiB", "").replace(",", ".");
+        Double usoMemoria = Double.parseDouble(memoriaNumbersOnly);
         
+        String memoriaTotalNumersOnly = conversor.formatarBytes(memoria.getTotal()).replace(" GiB", "").replace(",", ".");
+        Double totalMemoria = Double.parseDouble(memoriaTotalNumersOnly);
+        
+        Double usoMemoriaPorcentagem = getPorcentual(totalMemoria, usoMemoria);
+        
+        //Coletando temperatura
+        Double temp = temperatura.getTemperatura();
+
+        //Coletando uso da CPU
         Double usoCpu = processador.getUso();
-        
-        System.out.println(usoMemoria);
-        System.out.println(temp);
-        System.out.println(usoCpu);
+
+        //Coletando discos
+        List<Disco> discos = grupoDeDiscos.getDiscos();
+
+        for (Disco disco : discos) {
+
+            Connection connection = new Connection();
+            JdbcTemplate database = connection.getConnection();
+
+            String discoTotalGb = conversor.formatarBytes(disco.getTamanho());
+            String discoNumbersOnly = discoTotalGb.replace(" GiB", "").replace(",", ".");
+            Double discoTotal = Double.parseDouble(discoNumbersOnly);
+
+            String usoDiscoGb = conversor.formatarBytes(disco.getBytesDeLeitura()
+                    + disco.getBytesDeEscritas());
+            String usoNumbersOnly = usoDiscoGb.replace("GiB", "").replace(",", ".");
+            Double usoDisco = Double.parseDouble(usoNumbersOnly);
+
+            Double porcentDisco = getPorcentual(discoTotal, usoDisco);
+            System.out.println(usoMemoria);
+             database.update("insert into dados values (?, ?, ?, ?)",
+                   usoCpu, usoMemoriaPorcentagem, temp, porcentDisco);
+        }
+    }
+
+    private static Double getPorcentual(Double espacoTotal, Double espacoEmUso) {
+        return (espacoEmUso * 100) / espacoTotal;
     }
 }

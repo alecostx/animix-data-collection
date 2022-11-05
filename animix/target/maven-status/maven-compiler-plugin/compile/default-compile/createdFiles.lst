@@ -1,1 +1,5 @@
 com\mycompany\animix\App.class
+com\mycompany\animix\Dados.class
+com\mycompany\animix\Connection.class
+com\mycompany\animix\Maquina.class
+com\mycompany\animix\Coleta.class
