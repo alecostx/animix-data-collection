@@ -38,12 +38,10 @@ public class Coleta {
     ProcessoGrupo grupoDeProcessos = new ProcessoGrupo();
     Conversor conversor = new Conversor();
     
-    
-    
     public Dados coletar(Integer fkMaquina) {
         //Instanaciando uma nova data no momento que chama a função
         Date dataHoraAtual = new Date();
-        
+  
         // Coletando memória
         String memoriaNumbersOnly = conversor.formatarBytes(memoria.getEmUso()).replace(" GiB", "").replace(",", ".");
         Double usoMemoria = Double.parseDouble(memoriaNumbersOnly);
@@ -90,6 +88,7 @@ public class Coleta {
             database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     fkMaquina, usoCpu, usoMemoriaPorcentagem, temp, porcentDisco, qtdProcessos, qtdServicos, data, hora);
         }
+        
         // Montando objeto de retorno com o dado
         List<Dados> dados = database.query("select * from dados where fkMaquina = ? ", new BeanPropertyRowMapper(Dados.class), fkMaquina);
         Dados lastDado = dados.get(dados.size() - 1);

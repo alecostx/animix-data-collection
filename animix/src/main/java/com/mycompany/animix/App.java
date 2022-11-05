@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
  * @author Alexandre Costa
  */
 public class App {
-
+    
     public static void main(String[] args) {
         Coleta coleta = new Coleta();
         Runnable collectionRun = new Runnable() {
@@ -18,7 +18,7 @@ public class App {
             }
         };
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(collectionRun, 0, 5, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(collectionRun, 0, 1500, TimeUnit.MILLISECONDS);
         //coleta.getLastData(5, 1);
     }
 }
