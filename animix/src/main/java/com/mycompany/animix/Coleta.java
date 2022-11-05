@@ -65,7 +65,6 @@ public class Coleta {
             Double usoDisco = Double.parseDouble(usoNumbersOnly);
 
             Double porcentDisco = getPorcentual(discoTotal, usoDisco);
-            System.out.println(usoMemoria);
              database.update("insert into dados values (?, ?, ?, ?)",
                    usoCpu, usoMemoriaPorcentagem, temp, porcentDisco);
         }

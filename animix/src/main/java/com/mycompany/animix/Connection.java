@@ -9,42 +9,23 @@ import org.springframework.jdbc.core.JdbcTemplate;
  */
 public class Connection {
 
-    private JdbcTemplate conexao;
+    private JdbcTemplate connection;
 
     public Connection() {
-
         BasicDataSource datasource = new BasicDataSource();
-        
-        datasource.setDriverClassName("com.mysql.cj.jdbc.Driver");
 
-        datasource.setUrl("jdbc:mysql://localhost:3306/animix?useTimezone=true&serverTimezone=UTC");
+        datasource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
-        datasource.setUsername("root");
+        datasource.setUrl("jdbc:sqlserver://animix.database.windows.net:1433;database=animix;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;");
 
-        datasource.setPassword("67578900");
+        datasource.setUsername("admin-1adsb-grupo07");
 
-        conexao = new JdbcTemplate(datasource);
+        datasource.setPassword("#Gfgrupo7");
+
+        connection = new JdbcTemplate(datasource);
     }
 
     public JdbcTemplate getConnection() {
-        return conexao;
+        return connection;
     }
-
-    /**
-     * private JdbcTemplate connection;
-     *
-     * public Connection(){ BasicDataSource datasource = new BasicDataSource();
-     *
-     * datasource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-     *
-     * datasource.setUrl("jdbc:sqlserver://animix.database.windows.net:1433;database=animix;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;");
-     *
-     * datasource.setUsername("admin-1adsb-grupo07");
-     *
-     * datasource.setPassword("#Gfgrupo7");
-     *
-     * connection = new JdbcTemplate(datasource); }
-     *
-     * public JdbcTemplate getConnection() { return connection; }*
-     */
 }
