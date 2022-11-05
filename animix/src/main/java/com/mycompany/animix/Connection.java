@@ -9,11 +9,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
  */
 public class Connection {
 
-    private JdbcTemplate connection;
+    private JdbcTemplate conexao;
 
     public Connection() {
-        BasicDataSource datasource = new BasicDataSource();
 
+        BasicDataSource datasource = new BasicDataSource();
+        
         datasource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
         datasource.setUrl("jdbc:sqlserver://animix.database.windows.net:1433;database=animix;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;");
@@ -22,10 +23,10 @@ public class Connection {
 
         datasource.setPassword("#Gfgrupo7");
 
-        connection = new JdbcTemplate(datasource);
+        conexao = new JdbcTemplate(datasource);
     }
 
     public JdbcTemplate getConnection() {
-        return connection;
+        return conexao;
     }
 }
