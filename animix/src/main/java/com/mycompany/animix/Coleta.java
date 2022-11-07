@@ -92,7 +92,7 @@ public class Coleta {
             // Verificando criticidade do dado
             verifyData(dado, fkMaquina);
             Boolean isCritico = dado.getIsCritico();
-            List<String> comentarios = dado.getComment();
+            String comentarios = dado.getComment().toString();
             //Inserindo dados 
             database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     fkMaquina, usoCpu, usoMemoriaPorcentagem, temp, porcentDisco, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios);
@@ -120,15 +120,18 @@ public class Coleta {
             dado.setIsCritico(Boolean.TRUE);
             comments.add("Disco fora dos parametros ideais");
             dado.setComment(comments);
-        } else if (dado.getUsoMemoria() > memoriaIdeal) {
+        } 
+        if (dado.getUsoMemoria() > memoriaIdeal) {
             dado.setIsCritico(Boolean.TRUE);
             comments.add("Memoria fora dos parametros ideais");
             dado.setComment(comments);
-        } else if (dado.getTemperatura() > temperaturaIdeal) {
+        }
+        if (dado.getTemperatura() > temperaturaIdeal) {
             dado.setIsCritico(Boolean.TRUE);
             comments.add("Temperatura fora dos parametros ideais");
             dado.setComment(comments);
-        } else if (dado.getUsoCpu() > processadorIdeal) {
+        }
+        if (dado.getUsoCpu() > processadorIdeal) {
             dado.setIsCritico(Boolean.TRUE);
             comments.add("Processador fora dos parametros ideais");
             dado.setComment(comments);
