@@ -19,19 +19,18 @@ public class Maquina {
 
     private Integer idMaquina;
     private Integer fkStudio;
-    private Double temperatura;
-    private Double temperaturaIdeal;
-    private Double discoIdeal;
     private String disco;
-    private Double memoriaIdeal;
+    private Double discoIdeal;
     private String memoria;
-    private Double processadorIdeal;
+    private Double memoriaIdeal;
     private String processador;
+    private Double processamentoIdeal;
     private String sistema;
     private Boolean monitoraDisco;
     private Boolean monitoraMemoria;
     private Boolean monitoraProcessador;
     private Boolean monitoraTemperatura;
+    private Double temperaturaIdeal;
 
     public void setarInfos() {
         Sistema sistema = new Sistema();
@@ -54,14 +53,6 @@ public class Maquina {
 
     }
 
-    public Double getTemperaturaIdeal() {
-        return temperaturaIdeal;
-    }
-
-    public void setTemperaturaIdeal(Double temperaturaIdeal) {
-        this.temperaturaIdeal = temperaturaIdeal;
-    }
-
     public Integer getIdMaquina() {
         return idMaquina;
     }
@@ -78,12 +69,12 @@ public class Maquina {
         this.fkStudio = fkStudio;
     }
 
-    public Double getTemperatura() {
-        return temperatura;
+    public String getDisco() {
+        return disco;
     }
 
-    public void setTemperatura(Double temperatura) {
-        this.temperatura = temperatura;
+    public void setDisco(String disco) {
+        this.disco = disco;
     }
 
     public Double getDiscoIdeal() {
@@ -94,12 +85,12 @@ public class Maquina {
         this.discoIdeal = discoIdeal;
     }
 
-    public String getDisco() {
-        return disco;
+    public String getMemoria() {
+        return memoria;
     }
 
-    public void setDisco(String disco) {
-        this.disco = disco;
+    public void setMemoria(String memoria) {
+        this.memoria = memoria;
     }
 
     public Double getMemoriaIdeal() {
@@ -110,28 +101,20 @@ public class Maquina {
         this.memoriaIdeal = memoriaIdeal;
     }
 
-    public String getMemoria() {
-        return memoria;
-    }
-
-    public void setMemoria(String memoria) {
-        this.memoria = memoria;
-    }
-
-    public Double getProcessadorIdeal() {
-        return processadorIdeal;
-    }
-
-    public void setProcessadorIdeal(Double processadorIdeal) {
-        this.processadorIdeal = processadorIdeal;
-    }
-
     public String getProcessador() {
         return processador;
     }
 
     public void setProcessador(String processador) {
         this.processador = processador;
+    }
+
+    public Double getProcessamentoIdeal() {
+        return processamentoIdeal;
+    }
+
+    public void setProcessamentoIdeal(Double processamentoIdeal) {
+        this.processamentoIdeal = processamentoIdeal;
     }
 
     public String getSistema() {
@@ -173,5 +156,15 @@ public class Maquina {
     public void setMonitoraTemperatura(Boolean monitoraTemperatura) {
         this.monitoraTemperatura = monitoraTemperatura;
     }
+
+    public Double getTemperaturaIdeal() {
+        return temperaturaIdeal;
+    }
+
+    public void setTemperaturaIdeal(Double temperaturaIdeal) {
+        this.temperaturaIdeal = temperaturaIdeal;
+    }
+
+
 
 }

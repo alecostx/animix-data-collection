@@ -88,13 +88,14 @@ public class Coleta {
             dado.setPorcentDisco(porcentDisco);
             dado.setUsoCpu(usoCpu);
             dado.setTemperatura(temp);
-
+            
             // Verificando criticidade do dado
             verifyData(dado, fkMaquina);
-
-            //Insrindo dados 
-            database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    fkMaquina, usoCpu, usoMemoriaPorcentagem, temp, porcentDisco, qtdProcessos, qtdServicos, data, hora, dado.getIsCritico(), dado.getComment());
+            Boolean isCritico = dado.getIsCritico();
+            List<String> comentarios = dado.getComment();
+            //Inserindo dados 
+            database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    fkMaquina, usoCpu, usoMemoriaPorcentagem, temp, porcentDisco, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios);
         }
 
         // Montando objeto de retorno com o dado
@@ -107,12 +108,12 @@ public class Coleta {
     }
 
     public void verifyData(Dados dado, Integer fkMaquina) {
-        List<Maquina> maquinas = database.query("select * from maquina where idMaquina = ?", new BeanPropertyRowMapper(Maquina.class), fkMaquina);
+        List<Maquina> maquinas = database.query("select * from maquinas where idMaquina = ?", new BeanPropertyRowMapper(Maquina.class), fkMaquina);
         Maquina maq = maquinas.get(maquinas.size() - 1);
         Double memoriaIdeal = maq.getMemoriaIdeal();
         Double temperaturaIdeal = maq.getTemperaturaIdeal();
         Double discoIdeal = maq.getDiscoIdeal();
-        Double processadorIdeal = maq.getProcessadorIdeal();
+        Double processadorIdeal = maq.getProcessamentoIdeal();
         List<String> comments = new ArrayList<>();
 
         if (dado.getPorcentDisco() > discoIdeal) {
