@@ -1,6 +1,5 @@
 package com.mycompany.animix;
 
-import com.github.britooo.looca.api.core.Looca;
 import com.github.britooo.looca.api.group.discos.Disco;
 import com.github.britooo.looca.api.group.discos.DiscoGrupo;
 import com.github.britooo.looca.api.group.memoria.Memoria;
@@ -88,7 +87,7 @@ public class Coleta {
             dado.setPorcentDisco(porcentDisco);
             dado.setUsoCpu(usoCpu);
             dado.setTemperatura(temp);
-            
+
             // Verificando criticidade do dado
             verifyData(dado, fkMaquina);
             Boolean isCritico = dado.getIsCritico();
@@ -120,7 +119,7 @@ public class Coleta {
             dado.setIsCritico(Boolean.TRUE);
             comments.add("Disco fora dos parametros ideais");
             dado.setComment(comments);
-        } 
+        }
         if (dado.getUsoMemoria() > memoriaIdeal) {
             dado.setIsCritico(Boolean.TRUE);
             comments.add("Memoria fora dos parametros ideais");
