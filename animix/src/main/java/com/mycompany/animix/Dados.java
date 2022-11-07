@@ -1,10 +1,13 @@
 package com.mycompany.animix;
 
+import java.util.List;
+
 /**
  *
  * @author Alexandre Costa
  */
 public class Dados {
+
     private Integer idDado;
     private Integer fkMaquina;
     private Double usoCpu;
@@ -14,7 +17,17 @@ public class Dados {
     private Integer qtdProcessos;
     private Integer qtdServicos;
     private String dataColeta;
-    private String momento; 
+    private String momento;
+    private Boolean isCritico;
+    private List<String> comment;
+
+    public List<String> getComment() {
+        return comment;
+    }
+
+    public void setComment(List<String> comment) {
+        this.comment = comment;
+    }
 
     public Integer getIdDado() {
         return idDado;
@@ -22,6 +35,14 @@ public class Dados {
 
     public void setIdDado(Integer idDado) {
         this.idDado = idDado;
+    }
+
+    public Boolean getIsCritico() {
+        return isCritico;
+    }
+
+    public void setIsCritico(Boolean isCritico) {
+        this.isCritico = isCritico;
     }
 
     public Integer getFkMaquina() {
@@ -98,16 +119,16 @@ public class Dados {
 
     @Override
     public String toString() {
-        return          "---Dado---"  
-                + "\n idDado = " + idDado 
-                + "\n fkMaquina = " + fkMaquina 
-                + "\n usoCpu = " + usoCpu 
-                + "\n usoMemoria = " + usoMemoria 
-                + "\n temperatura = " + temperatura 
-                + "\n porcentDisco = " + porcentDisco 
+        return "---Dado---"
+                + "\n idDado = " + idDado
+                + "\n fkMaquina = " + fkMaquina
+                + "\n usoCpu = " + usoCpu
+                + "\n usoMemoria = " + usoMemoria
+                + "\n temperatura = " + temperatura
+                + "\n porcentDisco = " + porcentDisco
                 + "\n qtdProcessos = " + qtdProcessos
                 + "\n qtdServicos = " + qtdServicos
                 + "\n dataColeta = " + dataColeta
-                + "\n momento = " + momento ;
+                + "\n momento = " + momento;
     }
 }

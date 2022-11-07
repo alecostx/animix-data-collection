@@ -12,6 +12,7 @@ import com.github.britooo.looca.api.group.sistema.Sistema;
 import com.github.britooo.looca.api.group.temperatura.Temperatura;
 import com.github.britooo.looca.api.util.Conversor;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -24,6 +25,7 @@ import java.util.TimerTask;
  * @author Alexandre Costa
  */
 public class Coleta {
+
     // Objetos conexão
     Connection connection = new Connection();
     JdbcTemplate database = connection.getConnection();
@@ -37,11 +39,11 @@ public class Coleta {
     ServicoGrupo grupoDeServicos = new ServicoGrupo();
     ProcessoGrupo grupoDeProcessos = new ProcessoGrupo();
     Conversor conversor = new Conversor();
-    
+
     public Dados coletar(Integer fkMaquina) {
         //Instanaciando uma nova data no momento que chama a função
         Date dataHoraAtual = new Date();
-  
+
         // Coletando memória
         String memoriaNumbersOnly = conversor.formatarBytes(memoria.getEmUso()).replace(" GiB", "").replace(",", ".");
         Double usoMemoria = Double.parseDouble(memoriaNumbersOnly);
@@ -84,22 +86,62 @@ public class Coleta {
 
             Double porcentDisco = getPorcentual(discoTotal, usoDisco);
 
+            Dados dado = new Dados();
+            dado.setUsoMemoria(usoMemoriaPorcentagem);
+            dado.setPorcentDisco(porcentDisco);
+            dado.setUsoCpu(usoCpu);
+            dado.setTemperatura(temp);
+
+            // Verificando criticidade do dado
+            verifyData(dado, fkMaquina);
+
             //Insrindo dados 
-            database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    fkMaquina, usoCpu, usoMemoriaPorcentagem, temp, porcentDisco, qtdProcessos, qtdServicos, data, hora);
+            database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    fkMaquina, usoCpu, usoMemoriaPorcentagem, temp, porcentDisco, qtdProcessos, qtdServicos, data, hora, dado.getIsCritico(), dado.getComment());
         }
-        
+
         // Montando objeto de retorno com o dado
         List<Dados> dados = database.query("select * from dados where fkMaquina = ? ", new BeanPropertyRowMapper(Dados.class), fkMaquina);
         Dados lastDado = dados.get(dados.size() - 1);
+
         System.out.println(lastDado.toString());
 
         return lastDado;
     }
 
+    public void verifyData(Dados dado, Integer fkMaquina) {
+        List<Maquina> maquinas = database.query("select * from maquina where idMaquina = ?", new BeanPropertyRowMapper(Maquina.class), fkMaquina);
+        Maquina maq = maquinas.get(maquinas.size() - 1);
+        Double memoriaIdeal = maq.getMemoriaIdeal();
+        Double temperaturaIdeal = maq.getTemperaturaIdeal();
+        Double discoIdeal = maq.getDiscoIdeal();
+        Double processadorIdeal = maq.getProcessadorIdeal();
+        List<String> comments = new ArrayList<>();
+
+        if (dado.getPorcentDisco() > discoIdeal) {
+            dado.setIsCritico(Boolean.TRUE);
+            comments.add("Disco fora dos parametros ideais");
+            dado.setComment(comments);
+        } else if (dado.getUsoMemoria() > memoriaIdeal) {
+            dado.setIsCritico(Boolean.TRUE);
+            comments.add("Memoria fora dos parametros ideais");
+            dado.setComment(comments);
+        } else if (dado.getTemperatura() > temperaturaIdeal) {
+            dado.setIsCritico(Boolean.TRUE);
+            comments.add("Temperatura fora dos parametros ideais");
+            dado.setComment(comments);
+        } else if (dado.getUsoCpu() > processadorIdeal) {
+            dado.setIsCritico(Boolean.TRUE);
+            comments.add("Processador fora dos parametros ideais");
+            dado.setComment(comments);
+        } else {
+            dado.setIsCritico(false);
+        }
+    }
+
     public List<Dados> getLastData(Integer qtdDados, Integer fkMaquina) {
         // Montando objeto de retorno com os ultimos dados
-        
+
         List<Dados> dados = database.query("select * from dados where fkMaquina = ? order by momento desc limit ? ",
                 new BeanPropertyRowMapper(Dados.class), fkMaquina, qtdDados);
         System.out.println(dados.toString());
