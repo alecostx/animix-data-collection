@@ -10,6 +10,8 @@ import com.github.britooo.looca.api.group.sistema.Sistema;
 import com.github.britooo.looca.api.group.temperatura.Temperatura;
 import com.github.britooo.looca.api.util.Conversor;
 import java.util.List;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  *
@@ -25,6 +27,7 @@ public class Maquina {
     private Double memoriaIdeal;
     private String processador;
     private Double processamentoIdeal;
+    private Integer quantidadeDiscos;
     private String sistema;
     private Boolean monitoraDisco;
     private Boolean monitoraMemoria;
@@ -32,25 +35,37 @@ public class Maquina {
     private Boolean monitoraTemperatura;
     private Double temperaturaIdeal;
 
-    public void setarInfos() {
+    // Objetos conexão
+    Connection connection = new Connection();
+    JdbcTemplate database = connection.getConnection();
+
+    public Maquina getMaquina(Integer idMaquina) {
+        List<Maquina> maquinas = database.query("select * from maquinas where idMaquina = ?", new BeanPropertyRowMapper<>(Maquina.class), idMaquina);
+        Maquina maquina = maquinas.get(maquinas.size() - 1);
+        return maquina;
+    }
+
+    public void setarInfos(Integer idMaquina) {
         Sistema sistema = new Sistema();
         Memoria memoria = new Memoria();
         Processador processador = new Processador();
-        Temperatura temperatura = new Temperatura();
         DiscoGrupo grupoDeDiscos = new DiscoGrupo();
-        ServicoGrupo grupoDeServicos = new ServicoGrupo();
-        ProcessoGrupo grupoDeProcessos = new ProcessoGrupo();
         Conversor conversor = new Conversor();
-        List<Disco> discos = grupoDeDiscos.getDiscos();
 
         String sistemaOp = sistema.getSistemaOperacional();
-        String fabricante = sistema.getFabricante();
         String processadorNome = processador.getNome();
         String memoriaTotal = conversor.formatarBytes(memoria.getTotal());
         Integer qtdDisco = grupoDeDiscos.getQuantidadeDeDiscos();
+        
         String discoTotal = conversor.formatarBytes(grupoDeDiscos.getTamanhoTotal());
-        System.out.println(discoTotal);
 
+        database.update("UPDATE maquinas SET "
+                + "disco = ?"
+                + ",memoria = ?"
+                + ",processador = ?"
+                + ",quantidadeDiscos = ?"
+                + ",sistema = ?"
+                + " WHERE idMaquina = ?", discoTotal, memoriaTotal, processadorNome, qtdDisco, sistemaOp, idMaquina);
     }
 
     public Integer getIdMaquina() {
@@ -164,7 +179,5 @@ public class Maquina {
     public void setTemperaturaIdeal(Double temperaturaIdeal) {
         this.temperaturaIdeal = temperaturaIdeal;
     }
-
-
 
 }

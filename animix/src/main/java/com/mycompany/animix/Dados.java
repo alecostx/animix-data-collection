@@ -119,16 +119,21 @@ public class Dados {
 
     @Override
     public String toString() {
-        return "---Dado---"
-                + "\n idDado = " + idDado
-                + "\n fkMaquina = " + fkMaquina
-                + "\n usoCpu = " + usoCpu
-                + "\n usoMemoria = " + usoMemoria
-                + "\n temperatura = " + temperatura
-                + "\n porcentDisco = " + porcentDisco
-                + "\n qtdProcessos = " + qtdProcessos
-                + "\n qtdServicos = " + qtdServicos
-                + "\n dataColeta = " + dataColeta
-                + "\n momento = " + momento;
+        return "Dados{" + "idDado=" + idDado + ", fkMaquina=" + fkMaquina + ", usoCpu=" + usoCpu + ", usoMemoria=" + usoMemoria + ", temperatura=" + temperatura + ", porcentDisco=" + porcentDisco + ", qtdProcessos=" + qtdProcessos + ", qtdServicos=" + qtdServicos + ", dataColeta=" + dataColeta + ", momento=" + momento + ", isCritico=" + isCritico + ", comment=" + comment + '}';
     }
+
+//    @Override
+//    public String toString() {
+//        return "---Dado---"
+//                + "\n idDado = " + idDado
+//                + "\n fkMaquina = " + fkMaquina
+//                + "\n usoCpu = " + usoCpu
+//                + "\n usoMemoria = " + usoMemoria
+//                + "\n temperatura = " + temperatura
+//                + "\n porcentDisco = " + porcentDisco
+//                + "\n qtdProcessos = " + qtdProcessos
+//                + "\n qtdServicos = " + qtdServicos
+//                + "\n dataColeta = " + dataColeta
+//                + "\n momento = " + momento;
+//    }
 }

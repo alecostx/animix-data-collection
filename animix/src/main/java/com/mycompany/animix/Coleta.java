@@ -36,7 +36,7 @@ public class Coleta {
     ProcessoGrupo grupoDeProcessos = new ProcessoGrupo();
     Conversor conversor = new Conversor();
 
-    public Dados coletar(Integer fkMaquina) {
+    public void coletar(Maquina maquina) {
         //Instanaciando uma nova data no momento que chama a função
         Date dataHoraAtual = new Date();
 
@@ -57,7 +57,7 @@ public class Coleta {
 
         //Coletando discos
         List<Disco> discos = grupoDeDiscos.getDiscos();
-
+        
         //Coletando quantidade de serviços
         Integer qtdServicos = grupoDeServicos.getTotalServicosAtivos();
 
@@ -67,16 +67,17 @@ public class Coleta {
         // Coletando o momento 
         String data = new SimpleDateFormat("dd/MM/yyyy ").format(dataHoraAtual);
         String hora = new SimpleDateFormat("HH:mm:ss").format(dataHoraAtual);
-
+        
         for (Disco disco : discos) {
+            
             //Coletando disco
-
             String discoTotalGb = conversor.formatarBytes(disco.getTamanho());
             String discoNumbersOnly = discoTotalGb.replace(" GiB", "").replace(",", ".");
             Double discoTotal = Double.parseDouble(discoNumbersOnly);
 
             String usoDiscoGb = conversor.formatarBytes(disco.getBytesDeLeitura()
                     + disco.getBytesDeEscritas());
+
             String usoNumbersOnly = usoDiscoGb.replace("GiB", "").replace(",", ".");
             Double usoDisco = Double.parseDouble(usoNumbersOnly);
 
@@ -89,30 +90,26 @@ public class Coleta {
             dado.setTemperatura(temp);
 
             // Verificando criticidade do dado
-            verifyData(dado, fkMaquina);
+            verifyData(dado, maquina);
+
             Boolean isCritico = dado.getIsCritico();
-            String comentarios = dado.getComment().toString();
+            List<String> comentarios = dado.getComment();
+
             //Inserindo dados 
             database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    fkMaquina, usoCpu, usoMemoriaPorcentagem, temp, porcentDisco, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios);
+                    maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, temp, porcentDisco, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios.toString());
+
+//            System.out.println(dado.toString());;
+            System.out.println(porcentDisco);
         }
-
-        // Montando objeto de retorno com o dado
-        List<Dados> dados = database.query("select * from dados where fkMaquina = ? ", new BeanPropertyRowMapper(Dados.class), fkMaquina);
-        Dados lastDado = dados.get(dados.size() - 1);
-
-        System.out.println(lastDado.toString());
-
-        return lastDado;
     }
 
-    public void verifyData(Dados dado, Integer fkMaquina) {
-        List<Maquina> maquinas = database.query("select * from maquinas where idMaquina = ?", new BeanPropertyRowMapper(Maquina.class), fkMaquina);
-        Maquina maq = maquinas.get(maquinas.size() - 1);
-        Double memoriaIdeal = maq.getMemoriaIdeal();
-        Double temperaturaIdeal = maq.getTemperaturaIdeal();
-        Double discoIdeal = maq.getDiscoIdeal();
-        Double processadorIdeal = maq.getProcessamentoIdeal();
+    public void verifyData(Dados dado, Maquina maquina) {
+
+        Double memoriaIdeal = maquina.getMemoriaIdeal();
+        Double temperaturaIdeal = maquina.getTemperaturaIdeal();
+        Double discoIdeal = maquina.getDiscoIdeal();
+        Double processadorIdeal = maquina.getProcessamentoIdeal();
         List<String> comments = new ArrayList<>();
 
         if (dado.getPorcentDisco() > discoIdeal) {
