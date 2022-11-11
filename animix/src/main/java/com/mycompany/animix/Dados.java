@@ -1,5 +1,6 @@
 package com.mycompany.animix;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,6 +22,11 @@ public class Dados {
     private Boolean isCritico;
     private List<String> comment;
 
+    public Dados() {
+        this.comment = new ArrayList<>();
+    }
+    
+    
     public List<String> getComment() {
         return comment;
     }
@@ -136,4 +142,5 @@ public class Dados {
 //                + "\n dataColeta = " + dataColeta
 //                + "\n momento = " + momento;
 //    }
+    
 }

@@ -93,11 +93,11 @@ public class Coleta {
             verifyData(dado, maquina);
 
             Boolean isCritico = dado.getIsCritico();
-            List<String> comentarios = dado.getComment();
+            String comentarios = dado.getComment().toString();
 
             //Inserindo dados 
             database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, temp, porcentDisco, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios.toString());
+                    maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, temp, porcentDisco, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios);
 
 //            System.out.println(dado.toString());;
             System.out.println(porcentDisco);

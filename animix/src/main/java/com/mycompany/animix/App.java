@@ -17,15 +17,13 @@ public class App {
         Coleta coleta = new Coleta();
         Maquina maquina = new Maquina();
         
-        maquina.setarInfos(2);
-        Maquina maquinaMonitorar = maquina.getMaquina(2);
-        Maquina maquinaMonitorar1 = maquina.getMaquina(1);
+        // maquina.setarInfos(1);
+        Maquina maquinaMonitorar = maquina.getMaquina(1);
         
         timer.schedule(new TimerTask(){
             @Override
             public void run(){
                 coleta.coletar(maquinaMonitorar);
-                //coleta.coletar(maquinaMonitorar1);
             }
         }, 1500, 1500);
         
