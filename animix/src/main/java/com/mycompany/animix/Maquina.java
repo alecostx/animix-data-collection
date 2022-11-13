@@ -34,6 +34,7 @@ public class Maquina {
     private Boolean monitoraProcessador;
     private Boolean monitoraTemperatura;
     private Double temperaturaIdeal;
+    private Integer situacao;
 
     // Objetos conexão
     Connection connection = new Connection();
@@ -180,4 +181,20 @@ public class Maquina {
         this.temperaturaIdeal = temperaturaIdeal;
     }
 
+    public Integer getQuantidadeDiscos() {
+        return quantidadeDiscos;
+    }
+
+    public void setQuantidadeDiscos(Integer quantidadeDiscos) {
+        this.quantidadeDiscos = quantidadeDiscos;
+    }
+
+    public Integer getSituacao() {
+        return situacao;
+    }
+
+    public void setSituacao(Integer situacao) {
+        this.situacao = situacao;
+    }
+    
 }

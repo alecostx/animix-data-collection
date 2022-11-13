@@ -25,8 +25,7 @@ public class Dados {
     public Dados() {
         this.comment = new ArrayList<>();
     }
-    
-    
+
     public List<String> getComment() {
         return comment;
     }
@@ -123,24 +122,19 @@ public class Dados {
         this.momento = momento;
     }
 
-    @Override
     public String toString() {
-        return "Dados{" + "idDado=" + idDado + ", fkMaquina=" + fkMaquina + ", usoCpu=" + usoCpu + ", usoMemoria=" + usoMemoria + ", temperatura=" + temperatura + ", porcentDisco=" + porcentDisco + ", qtdProcessos=" + qtdProcessos + ", qtdServicos=" + qtdServicos + ", dataColeta=" + dataColeta + ", momento=" + momento + ", isCritico=" + isCritico + ", comment=" + comment + '}';
+        return ":warning: Alerta de dado crítico :warning: "
+                + "\n Maquina ID = " + fkMaquina
+                + "\n Uso da CPU = " + usoCpu + " %"
+                + "\n Uso da memoria = " + usoMemoria + " %"
+                + "\n Temperatura = " + temperatura + " ºC"
+                + "\n Uso de disco = " + porcentDisco + " %"
+                + "\n Quantiade de processos = " + qtdProcessos
+                + "\n Quantidade de serviços = " + qtdServicos
+                + "\n Data da coleta = " + dataColeta
+                + "\n Hora da coleta = " + momento
+                + "\n Informações = " + momento.toString();
+
     }
 
-//    @Override
-//    public String toString() {
-//        return "---Dado---"
-//                + "\n idDado = " + idDado
-//                + "\n fkMaquina = " + fkMaquina
-//                + "\n usoCpu = " + usoCpu
-//                + "\n usoMemoria = " + usoMemoria
-//                + "\n temperatura = " + temperatura
-//                + "\n porcentDisco = " + porcentDisco
-//                + "\n qtdProcessos = " + qtdProcessos
-//                + "\n qtdServicos = " + qtdServicos
-//                + "\n dataColeta = " + dataColeta
-//                + "\n momento = " + momento;
-//    }
-    
 }

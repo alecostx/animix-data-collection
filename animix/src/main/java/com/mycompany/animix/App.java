@@ -1,10 +1,8 @@
 package com.mycompany.animix;
 
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -12,20 +10,22 @@ import java.util.concurrent.TimeUnit;
  */
 public class App {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, InterruptedException {
         Timer timer = new Timer();
         Coleta coleta = new Coleta();
         Maquina maquina = new Maquina();
         
-        // maquina.setarInfos(1);
-        Maquina maquinaMonitorar = maquina.getMaquina(1);
+        Maquina maquinaMonitorar = maquina.getMaquina(2);
         
-        timer.schedule(new TimerTask(){
+        timer.schedule(new TimerTask() {
             @Override
-            public void run(){
-                coleta.coletar(maquinaMonitorar);
+            public void run() {
+                try {
+                    coleta.coletar(maquinaMonitorar);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
             }
         }, 1500, 1500);
-        
     }
 }

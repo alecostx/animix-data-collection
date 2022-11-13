@@ -9,10 +9,13 @@ import com.github.britooo.looca.api.group.servicos.ServicoGrupo;
 import com.github.britooo.looca.api.group.sistema.Sistema;
 import com.github.britooo.looca.api.group.temperatura.Temperatura;
 import com.github.britooo.looca.api.util.Conversor;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -35,6 +38,7 @@ public class Coleta {
     ServicoGrupo grupoDeServicos = new ServicoGrupo();
     ProcessoGrupo grupoDeProcessos = new ProcessoGrupo();
     Conversor conversor = new Conversor();
+    Slack slack = new Slack();
 
     public void coletar(Maquina maquina) {
         //Instanaciando uma nova data no momento que chama a função
@@ -57,7 +61,7 @@ public class Coleta {
 
         //Coletando discos
         List<Disco> discos = grupoDeDiscos.getDiscos();
-        
+
         //Coletando quantidade de serviços
         Integer qtdServicos = grupoDeServicos.getTotalServicosAtivos();
 
@@ -67,40 +71,50 @@ public class Coleta {
         // Coletando o momento 
         String data = new SimpleDateFormat("dd/MM/yyyy ").format(dataHoraAtual);
         String hora = new SimpleDateFormat("HH:mm:ss").format(dataHoraAtual);
-        
+
         for (Disco disco : discos) {
-            
-            //Coletando disco
-            String discoTotalGb = conversor.formatarBytes(disco.getTamanho());
-            String discoNumbersOnly = discoTotalGb.replace(" GiB", "").replace(",", ".");
-            Double discoTotal = Double.parseDouble(discoNumbersOnly);
 
-            String usoDiscoGb = conversor.formatarBytes(disco.getBytesDeLeitura()
-                    + disco.getBytesDeEscritas());
+            try {
+                //Coletando disco
+                String discoTotalGb = conversor.formatarBytes(disco.getTamanho());
+                String discoNumbersOnly = discoTotalGb.replace(" GiB", "").replace(",", ".");
+                Double discoTotal = Double.parseDouble(discoNumbersOnly);
 
-            String usoNumbersOnly = usoDiscoGb.replace("GiB", "").replace(",", ".");
-            Double usoDisco = Double.parseDouble(usoNumbersOnly);
+                String usoDiscoGb = conversor.formatarBytes(disco.getBytesDeLeitura()
+                        + disco.getBytesDeEscritas());
 
-            Double porcentDisco = getPorcentual(discoTotal, usoDisco);
+                String usoNumbersOnly = usoDiscoGb.replace("GiB", "").replace(",", ".");
+                Double usoDisco = Double.parseDouble(usoNumbersOnly);
 
-            Dados dado = new Dados();
-            dado.setUsoMemoria(usoMemoriaPorcentagem);
-            dado.setPorcentDisco(porcentDisco);
-            dado.setUsoCpu(usoCpu);
-            dado.setTemperatura(temp);
+                Double porcentDisco = getPorcentual(discoTotal, usoDisco);
 
-            // Verificando criticidade do dado
-            verifyData(dado, maquina);
+                Dados dado = new Dados();
+                dado.setUsoMemoria(usoMemoriaPorcentagem);
+                dado.setPorcentDisco(porcentDisco);
+                dado.setUsoCpu(usoCpu);
+                dado.setTemperatura(temp);
+                dado.setQtdProcessos(qtdProcessos);
+                dado.setQtdServicos(qtdServicos);
+                dado.setDataColeta(data);
+                dado.setMomento(hora);
+                dado.setFkMaquina(maquina.getIdMaquina());
 
-            Boolean isCritico = dado.getIsCritico();
-            String comentarios = dado.getComment().toString();
+                // Verificando criticidade do dado
+                verifyData(dado, maquina);
 
-            //Inserindo dados 
-            database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, temp, porcentDisco, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios);
+                Boolean isCritico = dado.getIsCritico();
+                String comentarios = dado.getComment().toString();
 
-//            System.out.println(dado.toString());;
-            System.out.println(porcentDisco);
+                //Inserindo dados
+                database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, temp, porcentDisco, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios);
+                slack.verificarDados(dado);
+            } catch (IOException ex) {
+                Logger.getLogger(Coleta.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Coleta.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
     }
 
@@ -139,9 +153,9 @@ public class Coleta {
     public List<Dados> getLastData(Integer qtdDados, Integer fkMaquina) {
         // Montando objeto de retorno com os ultimos dados
 
-        List<Dados> dados = database.query("select * from dados where fkMaquina = ? order by momento desc limit ? ",
-                new BeanPropertyRowMapper(Dados.class), fkMaquina, qtdDados);
-        System.out.println(dados.toString());
+        List<Dados> dados = database.query("select top (?) * from dados where fkMaquina = (?)",
+                new BeanPropertyRowMapper(Dados.class), qtdDados, fkMaquina);
+
         return dados;
     }
 
