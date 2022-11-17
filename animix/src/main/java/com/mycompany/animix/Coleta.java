@@ -47,7 +47,7 @@ public class Coleta {
         // Coletando memória
         String memoriaNumbersOnly = conversor.formatarBytes(memoria.getEmUso()).replace(" GiB", "").replace(",", ".");
         Double usoMemoria = Double.parseDouble(memoriaNumbersOnly);
-
+        
         String memoriaTotalNumersOnly = conversor.formatarBytes(memoria.getTotal()).replace(" GiB", "").replace(",", ".");
         Double totalMemoria = Double.parseDouble(memoriaTotalNumersOnly);
 
@@ -75,22 +75,28 @@ public class Coleta {
         for (Disco disco : discos) {
 
             try {
-                //Coletando disco
                 String discoTotalGb = conversor.formatarBytes(disco.getTamanho());
                 String discoNumbersOnly = discoTotalGb.replace(" GiB", "").replace(",", ".");
                 Double discoTotal = Double.parseDouble(discoNumbersOnly);
 
                 String usoDiscoGb = conversor.formatarBytes(disco.getBytesDeLeitura()
                         + disco.getBytesDeEscritas());
-
                 String usoNumbersOnly = usoDiscoGb.replace("GiB", "").replace(",", ".");
                 Double usoDisco = Double.parseDouble(usoNumbersOnly);
 
                 Double porcentDisco = getPorcentual(discoTotal, usoDisco);
+                // Coletando leitura do disco
+                String discoLeitura = conversor.formatarBytes(disco.getBytesDeLeitura());
+                String leituraNumbers = discoLeitura.replace(" GiB", "").replace(",", ".");
+                Double leitura = Double.parseDouble(leituraNumbers);
+
+                //Coletando escrita do disco
+                String discoEscrita = conversor.formatarBytes(disco.getBytesDeEscritas());
+                String escritaNumbers = discoEscrita.replace(" GiB", "").replace(",", ".");
+                Double escrita = Double.parseDouble(escritaNumbers);
 
                 Dados dado = new Dados();
                 dado.setUsoMemoria(usoMemoriaPorcentagem);
-                dado.setPorcentDisco(porcentDisco);
                 dado.setUsoCpu(usoCpu);
                 dado.setTemperatura(temp);
                 dado.setQtdProcessos(qtdProcessos);
@@ -98,6 +104,8 @@ public class Coleta {
                 dado.setDataColeta(data);
                 dado.setMomento(hora);
                 dado.setFkMaquina(maquina.getIdMaquina());
+                dado.setEscrita(escrita);
+                dado.setLeitura(leitura);
 
                 // Verificando criticidade do dado
                 verifyData(dado, maquina);
@@ -106,8 +114,8 @@ public class Coleta {
                 String comentarios = dado.getComment().toString();
 
                 //Inserindo dados
-                database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                        maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, temp, porcentDisco, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios);
+                database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, temp, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios, leitura, escrita, porcentDisco);
                 slack.verificarDados(dado);
             } catch (IOException ex) {
                 Logger.getLogger(Coleta.class.getName()).log(Level.SEVERE, null, ex);
@@ -126,11 +134,6 @@ public class Coleta {
         Double processadorIdeal = maquina.getProcessamentoIdeal();
         List<String> comments = new ArrayList<>();
 
-        if (dado.getPorcentDisco() > discoIdeal) {
-            dado.setIsCritico(Boolean.TRUE);
-            comments.add("Disco fora dos parametros ideais");
-            dado.setComment(comments);
-        }
         if (dado.getUsoMemoria() > memoriaIdeal) {
             dado.setIsCritico(Boolean.TRUE);
             comments.add("Memoria fora dos parametros ideais");

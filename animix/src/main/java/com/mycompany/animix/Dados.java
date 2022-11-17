@@ -14,7 +14,8 @@ public class Dados {
     private Double usoCpu;
     private Double usoMemoria;
     private Double temperatura;
-    private Double porcentDisco;
+    private Double leitura;
+    private Double escrita;
     private Integer qtdProcessos;
     private Integer qtdServicos;
     private String dataColeta;
@@ -82,13 +83,6 @@ public class Dados {
         this.temperatura = temperatura;
     }
 
-    public Double getPorcentDisco() {
-        return porcentDisco;
-    }
-
-    public void setPorcentDisco(Double porcentDisco) {
-        this.porcentDisco = porcentDisco;
-    }
 
     public Integer getQtdProcessos() {
         return qtdProcessos;
@@ -122,18 +116,36 @@ public class Dados {
         this.momento = momento;
     }
 
+    public Double getLeitura() {
+        return leitura;
+    }
+
+    public void setLeitura(Double leitura) {
+        this.leitura = leitura;
+    }
+
+    public Double getEscrita() {
+        return escrita;
+    }
+
+    public void setEscrita(Double escrita) {
+        this.escrita = escrita;
+    }
+    
+
     public String toString() {
         return ":warning: Alerta de dado crítico :warning: "
                 + "\n Maquina ID = " + fkMaquina
                 + "\n Uso da CPU = " + usoCpu + " %"
                 + "\n Uso da memoria = " + usoMemoria + " %"
                 + "\n Temperatura = " + temperatura + " ºC"
-                + "\n Uso de disco = " + porcentDisco + " %"
+                + "\n Leitura do disco = " + leitura
+                + "\n Escrita do disco = " + escrita
                 + "\n Quantiade de processos = " + qtdProcessos
                 + "\n Quantidade de serviços = " + qtdServicos
                 + "\n Data da coleta = " + dataColeta
                 + "\n Hora da coleta = " + momento
-                + "\n Informações = " + momento.toString();
+                + "\n Informações = " + comment.toString();
 
     }
 

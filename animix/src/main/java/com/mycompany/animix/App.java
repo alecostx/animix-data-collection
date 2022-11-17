@@ -14,6 +14,7 @@ public class App {
         Timer timer = new Timer();
         Coleta coleta = new Coleta();
         Maquina maquina = new Maquina();
+        Telegram telegram = new Telegram();
         
         Maquina maquinaMonitorar = maquina.getMaquina(2);
         
