@@ -1,5 +1,7 @@
-package com.mycompany.animix;
+package Application;
 
+import Coleta.Coleta;
+import Models.Maquina;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;

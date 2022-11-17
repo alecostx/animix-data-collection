@@ -2,8 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.mycompany.animix;
+package Views;
 
+import Views.HomePage;
+import Database.Connection;
+import Models.Usuario;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
@@ -63,7 +66,6 @@ public class Login extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(111, 66, 193));
         jLabel2.setText("Entre com sua conta!");
 
-        edtUsername.setBackground(new java.awt.Color(255, 255, 255));
         edtUsername.setText("Insira seu e-mail");
         edtUsername.setBorder(null);
         edtUsername.addActionListener(new java.awt.event.ActionListener() {
@@ -72,7 +74,6 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        edtPassword.setBackground(new java.awt.Color(255, 255, 255));
         edtPassword.setText("Insira sua senha");
         edtPassword.setBorder(null);
         edtPassword.addActionListener(new java.awt.event.ActionListener() {
@@ -155,7 +156,6 @@ public class Login extends javax.swing.JFrame {
         jLabel5.setText("Ainda não é cadastrado?");
 
         Cadastro.setBackground(new java.awt.Color(255, 255, 255));
-        Cadastro.setForeground(new java.awt.Color(0, 0, 0));
         Cadastro.setText("Cadastre-se");
         Cadastro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -1,4 +1,4 @@
-package com.mycompany.animix;
+package Models;
 
 /**
  *

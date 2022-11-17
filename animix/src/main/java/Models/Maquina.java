@@ -1,5 +1,6 @@
-package com.mycompany.animix;
+package Models;
 
+import Database.Connection;
 import com.github.britooo.looca.api.group.discos.Disco;
 import com.github.britooo.looca.api.group.discos.DiscoGrupo;
 import com.github.britooo.looca.api.group.memoria.Memoria;

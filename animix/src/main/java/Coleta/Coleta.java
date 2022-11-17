@@ -1,5 +1,10 @@
-package com.mycompany.animix;
+package Coleta;
 
+import Models.Maquina;
+import Models.Dados;
+import Integracoes.Slack;
+import Database.Connection;
+import Database.ConnectionMySqlLocal;
 import com.github.britooo.looca.api.group.discos.Disco;
 import com.github.britooo.looca.api.group.discos.DiscoGrupo;
 import com.github.britooo.looca.api.group.memoria.Memoria;
