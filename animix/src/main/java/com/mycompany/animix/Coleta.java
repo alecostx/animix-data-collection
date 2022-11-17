@@ -29,6 +29,9 @@ public class Coleta {
     Connection connection = new Connection();
     JdbcTemplate database = connection.getConnection();
 
+    ConnectionMySqlLocal connectionLocal = new ConnectionMySqlLocal();
+    JdbcTemplate databaseLocal = connectionLocal.getConnectionMySql();
+
     // Objetos diversos
     Sistema sistema = new Sistema();
     Memoria memoria = new Memoria();
@@ -61,7 +64,7 @@ public class Coleta {
 
         //Coletando discos
         List<Disco> discos = grupoDeDiscos.getDiscos();
-
+        
         //Coletando quantidade de serviços
         Integer qtdServicos = grupoDeServicos.getTotalServicosAtivos();
 
@@ -71,20 +74,15 @@ public class Coleta {
         // Coletando o momento 
         String data = new SimpleDateFormat("dd/MM/yyyy ").format(dataHoraAtual);
         String hora = new SimpleDateFormat("HH:mm:ss").format(dataHoraAtual);
-
+        
         for (Disco disco : discos) {
 
             try {
                 String discoTotalGb = conversor.formatarBytes(disco.getTamanho());
                 String discoNumbersOnly = discoTotalGb.replace(" GiB", "").replace(",", ".");
                 Double discoTotal = Double.parseDouble(discoNumbersOnly);
-
-                String usoDiscoGb = conversor.formatarBytes(disco.getBytesDeLeitura()
-                        + disco.getBytesDeEscritas());
-                String usoNumbersOnly = usoDiscoGb.replace("GiB", "").replace(",", ".");
-                Double usoDisco = Double.parseDouble(usoNumbersOnly);
-
-                Double porcentDisco = getPorcentual(discoTotal, usoDisco);
+                disco.getTempoDeTransferencia();
+                
                 // Coletando leitura do disco
                 String discoLeitura = conversor.formatarBytes(disco.getBytesDeLeitura());
                 String leituraNumbers = discoLeitura.replace(" GiB", "").replace(",", ".");
@@ -114,9 +112,20 @@ public class Coleta {
                 String comentarios = dado.getComment().toString();
 
                 //Inserindo dados
-                database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                        maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, temp, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios, leitura, escrita, porcentDisco);
+                try {
+                 database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, temp, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios, leitura, escrita, discoTotal); 
+                 
+                 databaseLocal.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        null, maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, temp, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios, leitura, escrita, discoTotal);
+                 
+                } catch (Exception e) {
+                    System.out.println("Erro ao inserir os dados");
+                    System.out.println(e);
+                }
+                          
                 slack.verificarDados(dado);
+                
             } catch (IOException ex) {
                 Logger.getLogger(Coleta.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InterruptedException ex) {
@@ -130,7 +139,6 @@ public class Coleta {
 
         Double memoriaIdeal = maquina.getMemoriaIdeal();
         Double temperaturaIdeal = maquina.getTemperaturaIdeal();
-        Double discoIdeal = maquina.getDiscoIdeal();
         Double processadorIdeal = maquina.getProcessamentoIdeal();
         List<String> comments = new ArrayList<>();
 

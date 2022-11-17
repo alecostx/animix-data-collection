@@ -43,6 +43,7 @@ public class Maquina {
     public Maquina getMaquina(Integer idMaquina) {
         List<Maquina> maquinas = database.query("select * from maquinas where idMaquina = ?", new BeanPropertyRowMapper<>(Maquina.class), idMaquina);
         Maquina maquina = maquinas.get(maquinas.size() - 1);
+        setarInfos(idMaquina);
         return maquina;
     }
 
@@ -57,7 +58,10 @@ public class Maquina {
         String processadorNome = processador.getNome();
         String memoriaTotal = conversor.formatarBytes(memoria.getTotal());
         Integer qtdDisco = grupoDeDiscos.getQuantidadeDeDiscos();
-        
+        String arquitetura = sistema.getArquitetura().toString();
+        String fabricante = sistema.getFabricante();
+        String permissoes = sistema.getPermissao().toString();
+        String inicializado = sistema.getInicializado().toString();
         String discoTotal = conversor.formatarBytes(grupoDeDiscos.getTamanhoTotal());
 
         database.update("UPDATE maquinas SET "
@@ -66,7 +70,11 @@ public class Maquina {
                 + ",processador = ?"
                 + ",quantidadeDiscos = ?"
                 + ",sistema = ?"
-                + " WHERE idMaquina = ?", discoTotal, memoriaTotal, processadorNome, qtdDisco, sistemaOp, idMaquina);
+                + ",arquitetura = ?"
+                + ",fabricante = ?"
+                + ",permissoes = ?"
+                + ",inicializado = ?"
+                + " WHERE idMaquina = ?", discoTotal, memoriaTotal, processadorNome, qtdDisco, sistemaOp, arquitetura, fabricante, permissoes, inicializado, idMaquina);
     }
 
     public Integer getIdMaquina() {

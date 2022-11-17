@@ -12,24 +12,19 @@ public class App {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         Timer timer = new Timer();
-//        Coleta coleta = new Coleta();
-        ColetaLocal coletaL = new ColetaLocal();
-        Login log = new Login();
-        log.show();
-//
-//        Maquina maquina = new Maquina();
-//
-//        Maquina maquinaMonitorar = maquina.getMaquina(2);
+        Coleta coleta = new Coleta();
+        //Login log = new Login();
+        //log.show();
 
-        MaquinaL maquinaL = new MaquinaL();
-        MaquinaL maquinaMonitorar2 = maquinaL;
+        Maquina maquina = new Maquina();
+
+        Maquina maquinaMonitorar = maquina.getMaquina(2);
+
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 try {
-                    coletaL.coletar2(maquinaMonitorar2);
-
-//                    coleta.coletar(maquinaMonitorar);
+                    coleta.coletar(maquinaMonitorar);
                 } catch (Exception e) {
                     System.out.println(e);
                 }
