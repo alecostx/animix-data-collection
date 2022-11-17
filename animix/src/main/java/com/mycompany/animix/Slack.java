@@ -18,7 +18,7 @@ public class Slack {
     JSONObject json = new JSONObject();
 
     private static final HttpClient client = HttpClient.newHttpClient();
-    private static final String URL = "https://hooks.slack.com/services/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";
+    private static final String URL = "https://hooks.slack.com/services/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";
 
     public static void sendMessage(JSONObject content) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder(
@@ -34,7 +34,7 @@ public class Slack {
 
     }
 
-    public void verificarDados(Dados dado) throws IOException, InterruptedException {
+    public void verificarDados(Dados dado ) throws IOException, InterruptedException {
 
         if (dado.getIsCritico()) {
             try {

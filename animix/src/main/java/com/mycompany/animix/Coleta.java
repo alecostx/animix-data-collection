@@ -50,7 +50,7 @@ public class Coleta {
         // Coletando memória
         String memoriaNumbersOnly = conversor.formatarBytes(memoria.getEmUso()).replace(" GiB", "").replace(",", ".");
         Double usoMemoria = Double.parseDouble(memoriaNumbersOnly);
-        
+
         String memoriaTotalNumersOnly = conversor.formatarBytes(memoria.getTotal()).replace(" GiB", "").replace(",", ".");
         Double totalMemoria = Double.parseDouble(memoriaTotalNumersOnly);
 
@@ -64,7 +64,7 @@ public class Coleta {
 
         //Coletando discos
         List<Disco> discos = grupoDeDiscos.getDiscos();
-        
+
         //Coletando quantidade de serviços
         Integer qtdServicos = grupoDeServicos.getTotalServicosAtivos();
 
@@ -74,7 +74,7 @@ public class Coleta {
         // Coletando o momento 
         String data = new SimpleDateFormat("dd/MM/yyyy ").format(dataHoraAtual);
         String hora = new SimpleDateFormat("HH:mm:ss").format(dataHoraAtual);
-        
+
         for (Disco disco : discos) {
 
             try {
@@ -82,7 +82,7 @@ public class Coleta {
                 String discoNumbersOnly = discoTotalGb.replace(" GiB", "").replace(",", ".");
                 Double discoTotal = Double.parseDouble(discoNumbersOnly);
                 disco.getTempoDeTransferencia();
-                
+
                 // Coletando leitura do disco
                 String discoLeitura = conversor.formatarBytes(disco.getBytesDeLeitura());
                 String leituraNumbers = discoLeitura.replace(" GiB", "").replace(",", ".");
@@ -111,21 +111,31 @@ public class Coleta {
                 Boolean isCritico = dado.getIsCritico();
                 String comentarios = dado.getComment().toString();
 
+                if (dado.getComment().size() == 2) {
+                    maquina.setSituacao(2);
+                } else if (dado.getComment().size() == 3) {
+                    maquina.setSituacao(1);
+                } else {
+                    maquina.setSituacao(3);
+                }
+
                 //Inserindo dados
                 try {
-                 database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                        maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, temp, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios, leitura, escrita, discoTotal); 
-                 
-                 databaseLocal.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                        null, maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, temp, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios, leitura, escrita, discoTotal);
-                 
+                    database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                            maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, temp, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios, leitura, escrita, discoTotal);
+
+                    databaseLocal.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                            null, maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, temp, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios, leitura, escrita, discoTotal);
+
                 } catch (Exception e) {
                     System.out.println("Erro ao inserir os dados");
                     System.out.println(e);
                 }
-                          
-                slack.verificarDados(dado);
-                
+
+                if (maquina.getSituacao() == 1) {
+                    slack.verificarDados(dado);
+                }
+
             } catch (IOException ex) {
                 Logger.getLogger(Coleta.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InterruptedException ex) {
