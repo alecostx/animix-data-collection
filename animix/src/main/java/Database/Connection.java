@@ -1,5 +1,6 @@
 package Database;
 
+import java.sql.Statement;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -25,4 +26,6 @@ public class Connection {
     public JdbcTemplate getConnection() {
         return conexao;
     }
+
+    
 }

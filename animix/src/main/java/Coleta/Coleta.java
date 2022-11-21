@@ -53,10 +53,10 @@ public class Coleta {
         Date dataHoraAtual = new Date();
 
         // Coletando memória
-        String memoriaNumbersOnly = conversor.formatarBytes(memoria.getEmUso()).replace(" GiB", "").replace(",", ".");
+        String memoriaNumbersOnly = conversor.formatarBytes(memoria.getEmUso()).replace(" GiB", "").replace(",", ".").replace(" TiB", "");
         Double usoMemoria = Double.parseDouble(memoriaNumbersOnly);
 
-        String memoriaTotalNumersOnly = conversor.formatarBytes(memoria.getTotal()).replace(" GiB", "").replace(",", ".");
+        String memoriaTotalNumersOnly = conversor.formatarBytes(memoria.getTotal()).replace(" GiB", "").replace(",", ".").replace(" TiB", "");
         Double totalMemoria = Double.parseDouble(memoriaTotalNumersOnly);
 
         Double usoMemoriaPorcentagem = getPorcentual(totalMemoria, usoMemoria);
@@ -84,18 +84,18 @@ public class Coleta {
 
             try {
                 String discoTotalGb = conversor.formatarBytes(disco.getTamanho());
-                String discoNumbersOnly = discoTotalGb.replace(" GiB", "").replace(",", ".");
+                String discoNumbersOnly = discoTotalGb.replace(" GiB", "").replace(",", ".").replace(" TiB", "");
                 Double discoTotal = Double.parseDouble(discoNumbersOnly);
                 disco.getTempoDeTransferencia();
 
                 // Coletando leitura do disco
                 String discoLeitura = conversor.formatarBytes(disco.getBytesDeLeitura());
-                String leituraNumbers = discoLeitura.replace(" GiB", "").replace(",", ".");
+                String leituraNumbers = discoLeitura.replace(" GiB", "").replace(",", ".").replace(" TiB", "");
                 Double leitura = Double.parseDouble(leituraNumbers);
 
                 //Coletando escrita do disco
                 String discoEscrita = conversor.formatarBytes(disco.getBytesDeEscritas());
-                String escritaNumbers = discoEscrita.replace(" GiB", "").replace(",", ".");
+                String escritaNumbers = discoEscrita.replace(" GiB", "").replace(",", ".").replace(" TiB", "");
                 Double escrita = Double.parseDouble(escritaNumbers);
 
                 Dados dado = new Dados();
