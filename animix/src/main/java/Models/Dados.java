@@ -138,7 +138,6 @@ public class Dados {
                 + "\n Maquina ID = " + fkMaquina
                 + "\n Uso da CPU = " + usoCpu + " %"
                 + "\n Uso da memoria = " + usoMemoria + " %"
-                + "\n Temperatura = " + temperatura + " ºC"
                 + "\n Leitura do disco = " + leitura
                 + "\n Escrita do disco = " + escrita
                 + "\n Quantiade de processos = " + qtdProcessos

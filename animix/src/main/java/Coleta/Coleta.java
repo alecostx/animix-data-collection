@@ -112,13 +112,16 @@ public class Coleta {
 
                 Boolean isCritico = dado.getIsCritico();
                 String comentarios = dado.getComment().toString();
+                
+                
 
-                if (dado.getComment().size() == 2) {
-                    maquina.setSituacao(2);
-                } else if (dado.getComment().size() == 3) {
-                    maquina.setSituacao(1);
-                } else {
-                    maquina.setSituacao(3);
+                switch (dado.getComment().size()) {
+                    case 2:
+                        maquina.setSituacao(1);
+                        break;
+                    default:
+                        maquina.setSituacao(3);
+                        break;
                 }
 
                 //Inserindo dados
@@ -150,7 +153,6 @@ public class Coleta {
     public void verifyData(Dados dado, Maquina maquina) {
 
         Double memoriaIdeal = maquina.getMemoriaIdeal();
-        Double temperaturaIdeal = maquina.getTemperaturaIdeal();
         Double processadorIdeal = maquina.getProcessamentoIdeal();
         List<String> comments = new ArrayList<>();
 

@@ -14,12 +14,12 @@ import org.json.JSONObject;
  *
  * @author Alexandre Costa
  */
-
 public class Slack {
+
     JSONObject json = new JSONObject();
 
     private static final HttpClient client = HttpClient.newHttpClient();
-    private static final String URL = "https://hooks.slack.com/services/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";
+    private static final String URL = "https://hooks.slack.com/services/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";
 
     public static void sendMessage(JSONObject content) throws IOException, InterruptedException {
         try {
@@ -33,16 +33,19 @@ public class Slack {
 
             System.out.println(String.format("Status: %s", response.statusCode()));
             System.out.println(String.format("Response: %s", response.body()));
+
+            if (response.statusCode() != 200) {
+                LogSlack lg = new LogSlack();
+                lg.gravarLog("ERRO AO ENVIAR MENSAGEM." + response.statusCode() + "\n" + response.toString());
+            }
         } catch (Exception e) {
             System.out.println(e);
-            LogSlack lg = new LogSlack();
-            lg.gravarLog("ERRO AO ENVIAR MENSAGEM." + e.getMessage() + "\n" + e.getClass());
         }
     }
 
-    public void verificarDados(Dados dado ) throws IOException, InterruptedException {
+    public void verificarDados(Dados dado) throws IOException, InterruptedException {
 
-        if (dado.getIsCritico()) {
+        if (dado.getComment().size() == 2) {
             try {
                 String dadoMensagem = dado.toString().replace("]", " ").replace("[", " ");
 
