@@ -18,7 +18,6 @@ public class ConnectionMySqlLocal {
         datasourceMySql.setUsername("root");
         datasourceMySql.setPassword("67578900");
             connectionMySql = new JdbcTemplate(datasourceMySql);
-
     } 
 
     public JdbcTemplate getConnectionMySql() {

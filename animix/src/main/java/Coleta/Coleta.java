@@ -129,8 +129,8 @@ public class Coleta {
                     database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                             maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, qtdProcessos, qtdServicos, data , isCritico, comentarios, leitura, escrita, discoTotal, hora);
 
-                    databaseLocal.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                            null, maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios, leitura, escrita, discoTotal);
+                    //databaseLocal.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    //        null, maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios, leitura, escrita, discoTotal);
 
                 } catch (Exception e) {
                     System.out.println("Erro ao inserir os dados");

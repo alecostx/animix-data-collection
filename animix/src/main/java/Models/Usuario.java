@@ -12,29 +12,28 @@ public class Usuario {
     private String senha;
 
     public String getEmail() throws IOException {
-        try {
-        return email;
-        } catch (Exception e) {
-            System.out.println(e);
+        
+        if (email == null) {
             LogModels lg = new LogModels();
-            lg.gravarLog("USUARIO NAO ENCONTRADO." + e.getMessage() + "\n" + e.getClass());
+            lg.gravarLog("USUARIO NAO ENCONTRADO." + "Email é nulo");
         }
-        return null;
+
+        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getSenha() throws IOException {
-        try {
-        return senha;
-        } catch (Exception e) {
-            System.out.println(e);
+    public String getSenha() throws IOException{
+        
+        if (senha == null) {
             LogModels lg = new LogModels();
-            lg.gravarLog("CLASSE:USUARIO:\nUSUARIO NAO ENCONTRADO." + e.getMessage() + "\n" + e.getClass());
+            lg.gravarLog("USUARIO NAO ENCONTRADO." + "Email é nulo");
         }
-        return null;
+
+        return senha;
+
     }
 
     public void setSenha(String senha) {
