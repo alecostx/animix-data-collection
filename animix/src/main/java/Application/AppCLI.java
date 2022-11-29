@@ -8,6 +8,7 @@ import Coleta.Coleta;
 import Models.Maquina;
 import Models.Usuario;
 import Views.HomePage;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -25,7 +26,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
  */
 public class AppCLI {
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
         Scanner leitor = new Scanner(System.in);
         Scanner leitor2 = new Scanner(System.in);
 
