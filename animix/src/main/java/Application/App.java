@@ -13,24 +13,24 @@ import java.util.TimerTask;
 public class App {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-//        Timer timer = new Timer();
-//        Coleta coleta = new Coleta();
+        Timer timer = new Timer();
+        Coleta coleta = new Coleta();
         Views.Login log = new Views.Login();
         log.show();
 
-//        Maquina maquina = new Maquina();
-//
-//        Maquina maquinaMonitorar = maquina.getMaquina(2);
-//
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                try {
-//                    coleta.coletar(maquinaMonitorar);
-//                } catch (Exception e) {
-//                    System.out.println(e);
-//                }
-//            }
-//        }, 1500, 1500);
+        Maquina maquina = new Maquina();
+
+        Maquina maquinaMonitorar = maquina.getMaquina(2);
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    coleta.coletar(maquinaMonitorar);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            }
+        }, 1500, 1500);
     }
 }

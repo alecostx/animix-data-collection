@@ -19,7 +19,7 @@ public class LogModels {
         Date dataHoraAtual = new Date();
         String data = new SimpleDateFormat("dd/MM/yyyy").format(dataHoraAtual);
         String hora = new SimpleDateFormat("HH:mm:ss").format(dataHoraAtual);
-        FileWriter arq = new FileWriter("C:/Users/55119/Desktop/log_animix.txt", true);
+        FileWriter arq = new FileWriter("C://LP/log.txt", true);
         PrintWriter gravarArq = new PrintWriter(arq);
 
         gravarArq.println(String.format("%s %s %s \n", data, hora, textoLog));

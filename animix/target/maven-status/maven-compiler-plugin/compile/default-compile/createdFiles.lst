@@ -15,6 +15,7 @@ Views\HomePage.class
 Integracoes\Slack.class
 Models\Maquina.class
 Views\Login.class
+Application\App$1.class
 Database\ConnectionMySqlLocal.class
 Models\LogModels.class
 Database\Connection.class

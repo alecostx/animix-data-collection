@@ -61,8 +61,6 @@ public class Coleta {
 
         Double usoMemoriaPorcentagem = getPorcentual(totalMemoria, usoMemoria);
 
-        //Coletando temperatura
-        Double temp = temperatura.getTemperatura();
 
         //Coletando uso da CPU
         Double usoCpu = processador.getUso();
@@ -101,7 +99,6 @@ public class Coleta {
                 Dados dado = new Dados();
                 dado.setUsoMemoria(usoMemoriaPorcentagem);
                 dado.setUsoCpu(usoCpu);
-                dado.setTemperatura(temp);
                 dado.setQtdProcessos(qtdProcessos);
                 dado.setQtdServicos(qtdServicos);
                 dado.setDataColeta(data);
@@ -126,11 +123,11 @@ public class Coleta {
 
                 //Inserindo dados
                 try {
-                    database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                            maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, temp, qtdProcessos, qtdServicos, data , isCritico, comentarios, leitura, escrita, discoTotal,hora);
+                    database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                            maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, qtdProcessos, qtdServicos, data , isCritico, comentarios, leitura, escrita, discoTotal, hora);
 
-                    databaseLocal.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                            null, maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, temp, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios, leitura, escrita, discoTotal);
+                    databaseLocal.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                            null, maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios, leitura, escrita, discoTotal);
 
                 } catch (Exception e) {
                     System.out.println("Erro ao inserir os dados");
@@ -162,11 +159,6 @@ public class Coleta {
             comments.add("Memoria fora dos parametros ideais");
             dado.setComment(comments);
         }
-        if (dado.getTemperatura() > temperaturaIdeal) {
-            dado.setIsCritico(Boolean.TRUE);
-            comments.add("Temperatura fora dos parametros ideais");
-            dado.setComment(comments);
-        }
         if (dado.getUsoCpu() > processadorIdeal) {
             dado.setIsCritico(Boolean.TRUE);
             comments.add("Processador fora dos parametros ideais");
@@ -174,15 +166,6 @@ public class Coleta {
         } else {
             dado.setIsCritico(false);
         }
-    }
-
-    public List<Dados> getLastData(Integer qtdDados, Integer fkMaquina) {
-        // Montando objeto de retorno com os ultimos dados
-
-        List<Dados> dados = database.query("select top (?) * from dados where fkMaquina = (?)",
-                new BeanPropertyRowMapper(Dados.class), qtdDados, fkMaquina);
-
-        return dados;
     }
 
     private static Double getPorcentual(Double espacoTotal, Double espacoEmUso) {
