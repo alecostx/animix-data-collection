@@ -127,7 +127,7 @@ public class Coleta {
                 //Inserindo dados
                 try {
                     database.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                            maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, temp, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios, leitura, escrita, discoTotal);
+                            maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, temp, qtdProcessos, qtdServicos, data , isCritico, comentarios, leitura, escrita, discoTotal,hora);
 
                     databaseLocal.update("insert into dados values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                             null, maquina.getIdMaquina(), usoCpu, usoMemoriaPorcentagem, temp, qtdProcessos, qtdServicos, data, hora, isCritico, comentarios, leitura, escrita, discoTotal);
