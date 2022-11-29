@@ -10,6 +10,7 @@ import com.github.britooo.looca.api.group.servicos.ServicoGrupo;
 import com.github.britooo.looca.api.group.sistema.Sistema;
 import com.github.britooo.looca.api.group.temperatura.Temperatura;
 import com.github.britooo.looca.api.util.Conversor;
+import java.io.IOException;
 import java.util.List;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -41,14 +42,22 @@ public class Maquina {
     Connection connection = new Connection();
     JdbcTemplate database = connection.getConnection();
 
-    public Maquina getMaquina(Integer idMaquina) {
+    public Maquina getMaquina(Integer idMaquina) throws IOException {
+        try {
         List<Maquina> maquinas = database.query("select * from maquinas where idMaquina = ?", new BeanPropertyRowMapper<>(Maquina.class), idMaquina);
         Maquina maquina = maquinas.get(maquinas.size() - 1);
         setarInfos(idMaquina);
         return maquina;
+        } catch (Exception e) {
+            System.out.println(e);
+            LogModels lg = new LogModels();
+            lg.gravarLog( "ERRO AO LOCALIZAR MAQUINA. \n" + e.getMessage() + "\n" + e.getClass());
+        }
+        return null;
     }
 
-    public void setarInfos(Integer idMaquina) {
+    public void setarInfos(Integer idMaquina) throws IOException {
+        try {
         Sistema sistema = new Sistema();
         Memoria memoria = new Memoria();
         Processador processador = new Processador();
@@ -76,6 +85,11 @@ public class Maquina {
                 + ",permissoes = ?"
                 + ",inicializado = ?"
                 + " WHERE idMaquina = ?", discoTotal, memoriaTotal, processadorNome, qtdDisco, sistemaOp, arquitetura, fabricante, permissoes, inicializado, idMaquina);
+        }catch (Exception e) {
+            System.out.println(e);
+            LogModels lg = new LogModels();
+            lg.gravarLog( "CLASSE: Maquina\n ERRO AO CAPTURAR DADOS. \n" + e.getMessage() + "\n" + e.getClass());
+        }
     }
 
     public Integer getIdMaquina() {

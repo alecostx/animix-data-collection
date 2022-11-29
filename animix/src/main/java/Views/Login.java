@@ -28,7 +28,7 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
-    public Login() {
+    public Login() throws IOException {
         initComponents();
     }
 
@@ -221,24 +221,36 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_edtUsernameActionPerformed
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
-
-        Connection connection = new Connection();
+        
+        
+        try {
+            Connection connection = new Connection();
 //        ConnectionMySqlLocal connection2 = new ConnectionMySqlLocal();
 
-        String username = edtUsername.getText();
-        String password = edtPassword.getText();
-        List<Usuario> usuario = connection.getConnection().query("select * from funcionario where email = '" + username + "' and senha = '" + password + "'",
-                new BeanPropertyRowMapper(Usuario.class));
-        if (!usuario.isEmpty()) {
-            dispose();
-            HomePage hpage = new HomePage();
-            hpage.show();
+            String username = edtUsername.getText();
+            String password = edtPassword.getText();
+            List<Usuario> usuario = connection.getConnection().query("select * from funcionario where email = '" + username + "' and senha = '" + password + "'",
+                    new BeanPropertyRowMapper(Usuario.class));
+            if (!usuario.isEmpty()) {
+                dispose();
+                HomePage hpage = new HomePage();
+                hpage.show();
 
-        } else {
-            JOptionPane.showMessageDialog(this, "Login ou senha estão incorretos..");
-            edtUsername.setText("");
-            edtPassword.setText("");
+            } else {
+                JOptionPane.showMessageDialog(this, "Login ou senha estão incorretos..");
+                edtUsername.setText("");
+                edtPassword.setText("");
 
+                LogLogin lg = new LogLogin();
+                try {
+                    lg.gravarLog("Login ou senha estão incorretos..");
+                } catch (IOException ex) {
+                    System.out.println(ex);
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        } catch (Exception e) {
         }
     }//GEN-LAST:event_loginActionPerformed
 
@@ -293,7 +305,11 @@ public class Login extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Login().setVisible(true);
+                try {
+                    new Login().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
